@@ -4,8 +4,10 @@ module Spree
     belongs_to :price, :class_name => "Spree::Price"
     has_one :calculator, :class_name => "Spree::Calculator", :as => :calculable, :dependent => :destroy
     accepts_nested_attributes_for :calculator
+    
     validates :calculator, :presence => true
-
+    validates :price, :presence => true
+    
     attr_accessible :value, :start_at, :end_at, :enabled
 
     scope :active, lambda {
