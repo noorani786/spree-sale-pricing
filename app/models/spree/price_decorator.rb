@@ -15,9 +15,9 @@ Spree::Price.class_eval do
   end
   
   # TODO make update_sale method
-
+  
   def active_sale
-    on_sale? ? first_sale(sale_prices.active) : nil
+    on_sale? ? first_sale(sale_prices) : nil
   end
   alias :current_sale :active_sale
 
@@ -39,7 +39,7 @@ Spree::Price.class_eval do
   end
 
   def on_sale?
-    sale_prices.active.present? && first_sale(sale_prices.active).value != original_price
+    sale_prices.present? && first_sale(sale_prices).value != original_price
   end
 
   def original_price
