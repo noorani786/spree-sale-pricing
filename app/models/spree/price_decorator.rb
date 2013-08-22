@@ -15,7 +15,7 @@ Spree::Price.class_eval do
   end
   
   # TODO make update_sale method
-  
+
   def active_sale
     on_sale? ? first_sale(sale_prices) : nil
   end
