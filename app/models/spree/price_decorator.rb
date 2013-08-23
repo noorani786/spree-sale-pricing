@@ -1,6 +1,6 @@
 Spree::Price.class_eval do
   has_many :sale_prices, dependent: :destroy
-  default_scope :include => :sale_prices
+  default_scope :include => :sale_prices, :order => ["spree_sale_prices.created_at DESC"]
   
   # TODO also accept a class reference for calculator type instead of only a string
   def put_on_sale(value, calculator_type = "Spree::Calculator::DollarAmountSalePriceCalculator", start_at = Time.now, end_at = nil, enabled = true)
@@ -17,17 +17,17 @@ Spree::Price.class_eval do
   # TODO make update_sale method
 
   def active_sale
-    on_sale? ? first_sale(sale_prices) : nil
+    on_sale? ? sale_prices.first : nil
   end
   alias :current_sale :active_sale
 
   def next_active_sale
-    sale_prices.present? ? first_sale(sale_prices) : nil
+    sale_prices.present? ? sale_prices.first : nil
   end
   alias :next_current_sale :next_active_sale
 
   def sale_price
-    on_sale? ? active_sale.price : nil
+    on_sale? ? active_sale.value : nil
   end
   
   def sale_price=(value)
@@ -39,7 +39,7 @@ Spree::Price.class_eval do
   end
 
   def on_sale?
-    sale_prices.present? && first_sale(sale_prices).value != original_price
+    sale_prices.present? && sale_prices.first.value != original_price
   end
 
   def original_price
@@ -80,7 +80,7 @@ Spree::Price.class_eval do
   
   private 
   
-  def first_sale(scope)
-    scope.order("created_at DESC").first
-  end
+  # def first_sale(scope)
+  #   scope.order("created_at DESC").first
+  # end
 end
